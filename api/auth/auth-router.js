@@ -1,13 +1,12 @@
 const router = require('express').Router();
 
 const {
-  restricted,
   checkReqBody,
   checkUserUnique,
   checkUserExists
-} = require('../middleware/index')
+} = require('../middleware/restricted')
 
-router.post('/register', (req, res) => {
+router.post('/register', checkReqBody, checkUserUnique, (req, res) => {
   res.end('implement register, please!');
   /*
     IMPLEMENT
@@ -36,7 +35,7 @@ router.post('/register', (req, res) => {
   */
 });
 
-router.post('/login', (req, res) => {
+router.post('/login', checkReqBody, checkUserExists, (req, res) => {
   res.end('implement login, please!');
   /*
     IMPLEMENT
