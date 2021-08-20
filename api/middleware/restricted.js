@@ -59,6 +59,7 @@ const checkUserExists = async (req, res, next) => {
   if (!existing) {
     next({ status: 401, message: 'invalid credentials' })
   } else {
+    req.user = existing
     next()
   }
 }
