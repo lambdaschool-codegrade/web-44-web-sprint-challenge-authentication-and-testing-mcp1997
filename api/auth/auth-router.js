@@ -6,8 +6,13 @@ const {
   checkUserExists
 } = require('../middleware/restricted')
 
-router.post('/register', checkReqBody, checkUserUnique, (req, res) => {
-  res.end('implement register, please!');
+const bcrypt = require('bcryptjs')
+const jwt = require('jsonwebtoken')
+const { JWT_SECRET } = require('./secret')
+
+const User = require('../auth/auth-model')
+
+router.post('/register', checkReqBody, checkUserUnique, (req, res, next) => {
   /*
     IMPLEMENT
     You are welcome to build additional middlewares to help with the endpoint's functionality.
@@ -33,6 +38,14 @@ router.post('/register', checkReqBody, checkUserUnique, (req, res) => {
     4- On FAILED registration due to the `username` being taken,
       the response body should include a string exactly as follows: "username taken".
   */
+  const { username, password } = req.body
+  const hash = bcrypt.hashSync(password, 8)
+
+  User.create({ username, password: hash })
+    .then(newUser => {
+      res.status(201).json(newUser)
+    })
+    .catch(next)
 });
 
 router.post('/login', checkReqBody, checkUserExists, (req, res) => {
